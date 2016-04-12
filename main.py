@@ -3,29 +3,40 @@ import os
 
 board = []
 
-for i in range(9):
-    board.append(['?'] * 9) # Creates game board
-
-def print_board(board):
+def print_board():
     os.system('clear')
     for row in board:
-        print(' '.join(row))
+        print(' '.join([str(x) for x in row ]))
 
-def fill_the_board():
-    message = "Enter a number (1-9). Put '?' if you don't know the number: "
-    for i in range(len(board)):
-        for x in range(len(board[i])):
-            board[i][x] = 'X'
-            print_board(board)
-            while True:
-                number = input(message)
-                if number.isdigit() and 1 <= int(number) <= 9:
-                    break
-                else:
-                    print("Number should be between 1 and 9")
+def read_board():
+    with open('sudoku.txt', 'r') as sudoku:
+        for line in sudoku:
+            board.append([int(a) for a in line.split()])
 
-            board[i][x] = number
+def possible_numbers_in_row(row):
+    possible_numbers = [a for a in range(1,10)]
+    for i in range(9):
+        if board[row][i] != 0:
+            possible_numbers.remove(board[row][i])
+    return possible_numbers
+
+def possible_numbers_in_column(column):
+    possible_numbers = [a for a in range(1,10)]
+
+    for i in range(9):
+        if board[i][column] != 0:
+            possible_numbers.remove(board[i][column])
+    return possible_numbers
+
+def find_possible_numbers_for_cell(row,column):
+    if board[row][column] == 0:
+        possible_column = possible_numbers_in_column(column)
+        possible_row = possible_numbers_in_row(row)
+        possible_numbers = list(set(possible_column) | set(possible_row))
+        return possible_numbers
 
 
-print_board(board)
-fill_the_board()
+
+read_board()
+print_board()
+print(find_possible_numbers_for_cell(7,2))
