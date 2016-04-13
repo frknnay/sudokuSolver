@@ -28,15 +28,54 @@ def possible_numbers_in_column(column):
             possible_numbers.remove(board[i][column])
     return possible_numbers
 
+def possible_numbers_in_box(row, column):
+    possible_numbers = [a for a in range(1,10)]
+    n_row = row
+    n_column = column
+    if n_row % 3 == 1:
+        n_row -= 1
+    elif n_row % 3 == 2:
+        n_row -= 2
+    if n_column % 3 == 1:
+        n_column -= 1
+    elif n_column % 3 == 2:
+        n_column -= 2
+
+    for i in range(3):
+        for j in range(3):
+            if board[n_row][n_column] != 0:
+                possible_numbers.remove(board[n_row][n_column])
+            n_column += 1
+        n_column -= 3
+        n_row += 1
+
+    return possible_numbers
+
+
 def find_possible_numbers_for_cell(row,column):
     if board[row][column] == 0:
         possible_column = possible_numbers_in_column(column)
         possible_row = possible_numbers_in_row(row)
-        possible_numbers = list(set(possible_column) | set(possible_row))
+        possible_box = possible_numbers_in_box(row, column)
+        possible_numbers = list(set(possible_column) & set(possible_row) & set(possible_box))
+        #print(possible_row,possible_column,possible_numbers)
         return possible_numbers
 
 
+def solve():
+    count = 0
+    while count < 50:
+
+        for i in range(9):
+            for j in range(9):
+                numbers = find_possible_numbers_for_cell(i,j)
+                if type(numbers) == list and len(numbers) == 1:
+                    board[i][j] = numbers[0]
+        count += 1
 
 read_board()
 print_board()
-print(find_possible_numbers_for_cell(7,2))
+print("-"*10)
+solve()
+for row in board:
+    print(' '.join([str(x) for x in row ]))
