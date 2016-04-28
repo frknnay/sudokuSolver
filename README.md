@@ -1,2 +1,2 @@
-# sudokuSolver
-Sudoku solver with Python
+# Sudoku Solver
+This program can solve easy sudoku puzzles.
