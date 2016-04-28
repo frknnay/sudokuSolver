@@ -1,10 +1,13 @@
 import os
+import time
+from random import randint
 
-os.system('clear    ')
+
+os.system('clear')
 board = []
 
-def print_board():
-
+def print_board(board):
+    os.system('clear')
     for i in range(9):
         for j in range(9):
             if j % 3 == 0 and j > 0:
@@ -14,6 +17,14 @@ def print_board():
         if i % 3 == 2 and i > 0 and i != 8:
             print('---------+---------+---------')
 
+def animate():
+    count = 0
+    while count < 20:
+        animate_board = [[randint(0,9) for i in range(9)]for i in range(9)]
+        os.system('clear')
+        print_board(animate_board)
+        time.sleep(0.1)
+        count += 1
 
 def read_board():
     with open('sudoku.txt', 'r') as sudoku:
@@ -67,8 +78,9 @@ def find_possible_numbers_for_cell(row,column):
         return possible_numbers
 
 def solve():
+    animate()
     count = 0
-    while count < 50:
+    while count <= 50:
         for i in range(9):
             for j in range(9):
                 numbers = find_possible_numbers_for_cell(i,j)
@@ -76,12 +88,16 @@ def solve():
                     board[i][j] = numbers[0]
         count += 1
         if not any(0 in sublist for sublist in board):
+            print_board(board)
+            print("\n" + "-" * 10 + " Solved " + "-" * 10 + "\n")
+            print("Algorithm called " + str(count) + " times.")
             break
+        if count == 49:
+            os.system('clear')
+            print("This Algorithm can not solve this puzzle!")
 
-    print("Algorithm called " + str(count) + " times.")
+
+
 
 read_board()
-print_board()
 solve()
-print("\n" + "-" * 10 + " Solved " + "-" * 10 + "\n")
-print_board()
