@@ -17,6 +17,8 @@ def print_board(board):
         if i % 3 == 2 and i > 0 and i != 8:
             print('---------+---------+---------')
 
+    print('\n')
+
 def animate():
     count = 0
     while count < 20:
@@ -27,10 +29,13 @@ def animate():
         count += 1
 
 def read_board():
-    with open('sudoku.txt', 'r') as sudoku:
-        for line in sudoku:
-            board.append([int(a) for a in line.split()])
-
+    try:
+        with open('sudoku.txt', 'r') as sudoku:
+            for line in sudoku:
+                board.append([int(a) for a in line.split()])
+    except:
+        print("Couldn't find 'sudoku.txt'!")
+        exit()
 def possible_numbers_in_row(row):
     possible_numbers = [a for a in range(1,10)]
     for i in range(9):
@@ -77,27 +82,43 @@ def find_possible_numbers_for_cell(row,column):
         #print(possible_row,possible_column,possible_numbers)
         return possible_numbers
 
+def confirm_the_puzzle(board): # Asks user if the board is the puzzle they want it to be solved
+    print_board(board)
+    user_answer = ''
+    while user_answer.capitalize() not in ['Y','N']:
+        user_answer = input('Is this the puzzle that you want it to be solved? [Y/N]\n')
+        if user_answer.capitalize() == 'Y':
+            return True
+        elif user_answer.capitalize() == 'N':
+            return False
+        else:
+            print("Please enter 'Y' or 'N'!")
+
 def solve():
-    animate()
-    count = 0
-    while count <= 50:
-        for i in range(9):
-            for j in range(9):
-                numbers = find_possible_numbers_for_cell(i,j)
-                if type(numbers) == list and len(numbers) == 1:
-                    board[i][j] = numbers[0]
-        count += 1
-        if not any(0 in sublist for sublist in board):
-            print_board(board)
-            print("\n" + "-" * 10 + " Solved " + "-" * 10 + "\n")
-            print("Algorithm called " + str(count) + " times.")
-            break
-        if count == 49:
-            os.system('clear')
-            print("This Algorithm can not solve this puzzle!")
+    read_board()
+    print_board(board)
+    if confirm_the_puzzle(board):
+        animate()
+        count = 0
+        while count <= 50:
+            for i in range(9):
+                for j in range(9):
+                    numbers = find_possible_numbers_for_cell(i,j)
+                    if type(numbers) == list and len(numbers) == 1:
+                        board[i][j] = numbers[0]
+            count += 1
+            if not any(0 in sublist for sublist in board):
+                print_board(board)
+                print("-" * 10 + " Solved " + "-" * 10 + "\n")
+                print("Algorithm called " + str(count) + " times.")
+                break
+            if count == 49:
+                os.system('clear')
+                print("This Algorithm can not solve this puzzle!")
+
+    else:
+        print("Please edit 'sudoku.txt' file!")
 
 
 
-
-read_board()
 solve()
