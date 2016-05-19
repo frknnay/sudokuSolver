@@ -3,11 +3,11 @@ import time
 from random import randint
 
 
-os.system('clear')
+os.system('cls' if os.name=='nt' else 'clear')
 board = []
 
 def print_board(board):
-    os.system('clear')
+    os.system('cls' if os.name=='nt' else 'clear')
     for i in range(9):
         for j in range(9):
             if j % 3 == 0 and j > 0:
@@ -23,7 +23,7 @@ def animate():
     count = 0
     while count < 20:
         animate_board = [[randint(0,9) for i in range(9)]for i in range(9)]
-        os.system('clear')
+        os.system('cls' if os.name=='nt' else 'clear')
         print_board(animate_board)
         time.sleep(0.1)
         count += 1
@@ -73,7 +73,7 @@ def possible_numbers_in_box(row, column):
 
     return possible_numbers
 
-def find_possible_numbers_for_cell(row,column):
+def possible_numbers_for_cell(row,column):
     if board[row][column] == 0:
         possible_column = possible_numbers_in_column(column)
         possible_row = possible_numbers_in_row(row)
@@ -103,7 +103,7 @@ def solve():
         while count <= 50:
             for i in range(9):
                 for j in range(9):
-                    numbers = find_possible_numbers_for_cell(i,j)
+                    numbers = possible_numbers_for_cell(i,j)
                     if type(numbers) == list and len(numbers) == 1:
                         board[i][j] = numbers[0]
             count += 1
@@ -113,7 +113,7 @@ def solve():
                 print("Algorithm called " + str(count) + " times.")
                 break
             if count == 49:
-                os.system('clear')
+                os.system('cls' if os.name=='nt' else 'clear')
                 print("This Algorithm can not solve this puzzle!")
 
     else:
